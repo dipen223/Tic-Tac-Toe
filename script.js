@@ -16,6 +16,7 @@ let winningPatterns = [
 function chooseSymbol(){
     let playerSymbol = prompt("Please pick your symbol: X or O ?");
     let computerSymbol;
+     let emptySpots = [];
 
     if(playerSymbol === "X"){
         computerSymbol = "O";
@@ -23,19 +24,39 @@ function chooseSymbol(){
     else{
         computerSymbol = "X";
     }
+
+    function getEmptySpots(){
+        
+    for(let  i = 0; i<gameBoard.board.length;i++){
+        if(gameBoard.board[i] === null || gameBoard.board[i] === ''){
+            emptySpots.push(i)
+        }
+    }
+    if(emptySpots.length === 0){
+        console.log("No empty slots left");
+        return
+    }
+    return emptySpots;
+
+    }
+    
+    
     
     function chooseSpot(){
     let userSpot = prompt("Please enter a spot number to place your symbol");
     gameBoard.board[userSpot] = playerSymbol;
-    let computerSpot = Math.floor(Math.random() * gameBoard.board.length);
-    console.log(computerSpot);
-    if(computerSpot != userSpot){
-        gameBoard.board[computerSpot] = computerSymbol;
-    
 
-    }
+    let randomIndex = Math.floor(Math.random() * getEmptySpots().length);
+    let computerSpot = emptySpots[randomIndex];
+    gameBoard.board[computerSpot] = computerSymbol;
+    
 }
+
+
+
 chooseSpot();
+
+
 
 }
 
