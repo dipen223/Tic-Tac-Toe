@@ -22,11 +22,14 @@ let gameBoard =(function() {
 })();
 
 
+
 function Player(symbol){
     return {symbol};
 }
-gameBoard.getBoard();
-let winningPatterns = [
+
+
+const gameController = (function(){
+    const winningPatterns = [
     [0,1,2],
     [0,3,6],
     [0,4,8],
@@ -35,102 +38,69 @@ let winningPatterns = [
     [2,4,6],
     [3,4,5],
     [6,7,8],
-]
+];
+let player1, player2, currentPlayer;
+  function start(){
+    gameBoard.reset();
 
-function chooseSymbol(){
-    let playerSymbol = prompt("Please pick your symbol: X or O ?");
-    let computerSymbol;
-       let turn = 1;
-     
-
-    if(playerSymbol === "X"){
-        computerSymbol = "O";
-    }
-    else{
-        computerSymbol = "X";
+    let player1Symbol = prompt("Please pick your symbol: X or O ?").toUpperCase();
+    while(player1Symbol !== "X" && player1Symbol !== "O"){
+        player1Symbol = prompt("Invalid! Choose X or O:").toUpperCase();
     }
 
-    function getEmptySpots(){
-        let emptySpots = [];
-        
-    for(let  i = 0; i<gameBoard.board.length;i++){
-        if(gameBoard.board[i] === null || gameBoard.board[i] === ''){
-            emptySpots.push(i)
+    player1 = Player(player1Symbol);
+    player2 = Player(player1Symbol === "X"? "O" : "X");
+
+    console.log(`Player1 is ${player1.symbol} , Player 2 is ${player2.symbol}`);
+    playRound();
+
+  }
+
+  function getEmptySpots(){
+    return gameBoard.getBoard().map((val,index) => (val === "" ? index:null)).filter(idx => idx !== null);
+  }
+
+  function checkWinner(symbol){
+    const board = gameBoard.getBoard();
+    const positions = board.map((val,idx) => val === symbol ? idx:null).filter(idx => idx !== null);
+
+return winningPatterns.some(pattern => pattern.every(idx => positions.includes(idx)));
+  }
+
+  function playRound(){
+    printBoard();
+    const emptySpots = getEmptySpots();
+     if (emptySpots.length === 0) {
+            console.log("It's a draw!");
+            return;
         }
+
+    let spot = Number(prompt(`Player ${currentPlayer.symbol}`)) ;
+    while(!emptySpots.includes(spot)){
+        spot = Number(prompt(`Invalid spot! Choose one of : ${emptySpots.join(",")}`));
+    }   
+
+    gameBoard.setCell(spot,currentPlayer.symbol);
+
+    if(checkWinner(currentPlayer.symbol)){
+        printBoard();
+        console.log(`Player ${currentPlayer.symbol} wins`);
+        return;
     }
-    if(emptySpots.length === 0){
-        console.log("No empty slots left");
-        return
-    }
-    return emptySpots;
+   if(getEmptySpots().length === 0){
+    printBoard();
+    console.log("It's a draw");
+    return;
+   }
+   currentPlayer = currentPlayer === player1 ? player2: player1;
+   playRound();
+  }
 
-    }
-
-    
-   function winnerDecider(){
-    function containsAll(a,b){
-        return b.every(val => a.includes(val));
-    }
-        let playerPositions = [];
-        let computerPositions = [];
-        for(let i = 0; i<gameBoard.board.length; i++){
-            if(gameBoard.board[i] === playerSymbol){
-                playerPositions.push(i)
-
-            }
-            else if(gameBoard.board[i] === computerSymbol){
-                computerPositions.push(i);
-            }
-        }
-        for(let pattern of winningPatterns){
-            if(containsAll(playerPositions,pattern))
-            {
-
-            
-           return playerSymbol;
-            }
-            if(containsAll(computerPositions,pattern))
-            {
-
-            
-             return computerSymbol;
-            }
-         
-        }
-     
-       if(getEmptySpots().length === 0){
-        return "draw";
-       }
-
-       return null;
-
-    }
-function chooseSpot(){
-     
-    let userSpot = prompt("Please enter a spot number to place your symbol");
-    gameBoard.board[userSpot] = playerSymbol;
-
-    let randomIndex = Math.floor(Math.random() * getEmptySpots().length);
-    let computerSpot = emptySpots[randomIndex];
-    gameBoard.board[computerSpot] = computerSymbol;
- 
-    
-    
-}
+})();
 
 
-chooseSpot();
-
-
-
-}
+gameController.start();
 
 
 
 
-
-
-
-// based on the choice of player,computer has options on board to choose random cells from the remaining cells
-// let's say I start the game and pick one cell to place
-// In computer turn it chooses one random cell on it's turn
