@@ -1,6 +1,25 @@
-let gameBoard = {
-    board:["","","","","","","","",""],
-}
+let gameBoard =(function() {
+    let board = ["","","","","","","","",""];
+
+    function getBoard(){
+        return board
+    }
+
+    function setCell(index,symbol){
+        if(board[index] === ""){
+            board[index] = symbol;
+            return true;
+        }
+        return false;
+    }
+
+    function reset(){
+        board = ["","","","","","","","",""];
+    }
+
+    return {getBoard,setCell,reset};
+
+})();
 
 let winningPatterns = [
     [0,1,2],
