@@ -21,6 +21,11 @@ let gameBoard =(function() {
 
 })();
 
+
+function Player(symbol){
+    return {symbol};
+}
+gameBoard.getBoard();
 let winningPatterns = [
     [0,1,2],
     [0,3,6],
