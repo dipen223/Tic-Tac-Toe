@@ -1,6 +1,7 @@
 let cells = document.querySelectorAll(".cell");
 let turnO = true;
 let resetBtn = document.querySelector(".reset");
+let msgContainer = document.querySelector(".msg-container")
 const winningPatterns = [
     [0,1,2],
     [0,3,6],
@@ -29,7 +30,8 @@ cells.forEach((cell) => {
 });
 
 const showWinner = (winner) =>{
-    
+
+    msgContainer.innerHTML = `<p>${winner} won the game</p>`
 
 }
 const checkWinner = () => {
@@ -39,7 +41,7 @@ const checkWinner = () => {
     let pos3Val = cells[pattern[2]].innerText;
     if(pos1Val !== "" && pos2Val !== "" && pos3Val !== ""){
         if(pos1Val === pos2Val && pos2Val === pos3Val){
-            console.log(`Winner ${pos1Val}`);
+            showWinner(pos1Val);
         }
     }
 }
