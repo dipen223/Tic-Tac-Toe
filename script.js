@@ -1,114 +1,55 @@
-// let gameBoard =(function() {
-//     let board = ["","","","","","","","",""];
+let cells = document.querySelectorAll(".cell");
+let turnO = true;
+let resetBtn = document.querySelector(".reset");
+const winningPatterns = [
+    [0,1,2],
+    [0,3,6],
+    [0,4,8],
+    [1,4,7],
+    [2,5,8],
+    [2,4,6],
+    [3,4,5],
+    [6,7,8],
+];
 
-//     function getBoard(){
-//         return board
-//     }
-
-//     function setCell(index,symbol){
-//         if(board[index] === ""){
-//             board[index] = symbol;
-//             return true;
-//         }
-//         return false;
-//     }
-
-//     function reset(){
-//         board = ["","","","","","","","",""];
-//     }
-
-//     return {getBoard,setCell,reset};
-
-// })();
-
-
-
-// function Player(symbol){
-//     return {symbol};
-// }
-
-
-// const gameController = (function(){
-//     const winningPatterns = [
-//     [0,1,2],
-//     [0,3,6],
-//     [0,4,8],
-//     [1,4,7],
-//     [2,5,8],
-//     [2,4,6],
-//     [3,4,5],
-//     [6,7,8],
-// ];
-// let player1, player2, currentPlayer;
-//   function start(){
-//     gameBoard.reset();
-
-//     let player1Symbol = prompt("Please pick your symbol: X or O ?").toUpperCase();
-//     while(player1Symbol !== "X" && player1Symbol !== "O"){
-//         player1Symbol = prompt("Invalid! Choose X or O:").toUpperCase();
-//     }
-
-//     player1 = Player(player1Symbol);
-//     player2 = Player(player1Symbol === "X"? "O" : "X");
-
-//     currentPlayer = player1;
-
-//     console.log(`Player1 is ${player1.symbol} , Player 2 is ${player2.symbol}`);
-//     playRound();
-
-//   }
-
-//   function getEmptySpots(){
-//     return gameBoard.getBoard().map((val,index) => (val === "" ? index:null)).filter(idx => idx !== null);
-//   }
-
-//   function checkWinner(symbol){
-//     const board = gameBoard.getBoard();
-//     const positions = board.map((val,idx) => val === symbol ? idx:null).filter(idx => idx !== null);
-
-// return winningPatterns.some(pattern => pattern.every(idx => positions.includes(idx)));
-//   }
-
-//   function playRound(){
-//     printBoard();
-//     const emptySpots = getEmptySpots();
-//      if (emptySpots.length === 0) {
-//             console.log("It's a draw!");
-//             return;
-//         }
-
-//     let spot = Number(prompt(`Player ${currentPlayer.symbol} ,choose spot(0-8):`)) ;
-//     while(!emptySpots.includes(spot)){
-//         spot = Number(prompt(`Invalid spot! Choose one of : ${emptySpots.join(",")}`));
-//     }   
-
-//     gameBoard.setCell(spot,currentPlayer.symbol);
-
-//     if(checkWinner(currentPlayer.symbol)){
-//         printBoard();
-//         console.log(`Player ${currentPlayer.symbol} wins`);
-//         return;
-//     }
-//    if(getEmptySpots().length === 0){
-//     printBoard();
-//     console.log("It's a draw");
-//     return;
-//    }
-//    currentPlayer = currentPlayer === player1 ? player2: player1;
-//    playRound();
+cells.forEach((cell) => {
+    cell.addEventListener("click",() => {
+        if(turnO){
+            cell.innerText = "O";
+            turnO = false;
+        }
+        else{
+            cell.innerText = "X";
+            turnO = true;
+        }
+        cell.disabled = true;
+         checkWinner();
+    });
   
-//   }
-//   function printBoard(){
-//     console.log(gameBoard.getBoard());
-//   }
+});
 
-//   return {start};
+const showWinner = (winner) =>{
+    
 
-// })();
+}
+const checkWinner = () => {
+    for(let pattern of winningPatterns){
+    let pos1Val = cells[pattern[0]].innerText;
+    let pos2Val = cells[pattern[1]].innerText;
+    let pos3Val = cells[pattern[2]].innerText;
+    if(pos1Val !== "" && pos2Val !== "" && pos3Val !== ""){
+        if(pos1Val === pos2Val && pos2Val === pos3Val){
+            console.log(`Winner ${pos1Val}`);
+        }
+    }
+}
+   
+}
+   
 
-
-// gameController.start();
-
-
-
-
+resetBtn.addEventListener("click",() =>{
+    for(let cell of cells){
+        cell.innerText = "";
+        turnO = true;
+    }
+})
