@@ -1,6 +1,7 @@
 let cells = document.querySelectorAll(".cell");
 let turnO = true;
 let resetBtn = document.querySelector(".reset");
+let newGameBtn = document.querySelector(".new-game");
 let msgContainer = document.querySelector(".msg-container")
 const winningPatterns = [
     [0,1,2],
@@ -29,9 +30,21 @@ cells.forEach((cell) => {
   
 });
 
+const  disableCells = () =>{
+    for(let cell of cells){
+        cell.disabled = true;
+    }
+}
+const enableCells = () =>{
+      for(let cell of cells){
+        cell.disabled = false;
+    }
+
+}
 const showWinner = (winner) =>{
 
     msgContainer.innerHTML = `<p>${winner} won the game</p>`
+    disableCells();
 
 }
 const checkWinner = () => {
@@ -49,9 +62,15 @@ const checkWinner = () => {
 }
    
 
-resetBtn.addEventListener("click",() =>{
+const resetGame = () => {
     for(let cell of cells){
         cell.innerText = "";
         turnO = true;
+        
     }
-})
+    msgContainer.innerHTML = ""; 
+    enableCells();
+
+}
+resetBtn.addEventListener("click",resetGame);
+newGameBtn.addEventListener("click",resetGame);
